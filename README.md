@@ -18,7 +18,7 @@ python cncfilter.py [-i vstupny_subor] [-o vystupny_subor] [-z hlbka_z] [-h]
 ## Parametre
 
 - `-i vstupny_subor`: Určuje vstupný súbor s CNC G-kódom.
-- `-o vystupny_subor`: Určuje názov výstupného súboru, kam bude uložený filtrovaný kód. Ak nie je zadaný, použije sa predvolený názov s pridaným "_OUTPUT".
+- `-o výstupny_subor`: Určuje názov výstupného súboru, kam bude uložený filtrovaný kód. Ak nie je zadaný, použije sa predvolený názov s apendovaným reťazcom "_OUTPUT".
 - `-z hlbka_z`: Určuje hĺbku vnorenia Z, ktorá sa použije na filtrovanie pracovných pohybov finálneho vnorenia. Môže byť zadaná buď ako celé číslo alebo ako číslo s desatinným miestom oddeleným bodkou ".".
 - `-h`: Zobrazí nápovedu s možnosťami spustenia programu.
 
@@ -31,22 +31,22 @@ python cncfilter.py [-i vstupny_subor] [-o vystupny_subor] [-z hlbka_z] [-h]
 5. Nežiaduce časti kódu (DISABLED oblasti) sú zaremované a vložené do výstupného súboru vo forme komentárov.
 
 ### ENABLED / DISABLED oblasti
-Termíny `ENABLED` oblasť a `DISABLED` oblasť vznikli v pocese definície zadania a sú použité pre akési označenie častí z pôvodného cnc-kódu, ktoré sa májú alebo nemajú preniesť do výstupného súboru s novým cnc-kódom.  
+Termíny `ENABLED` oblasť a `DISABLED` oblasť vznikli v pocese definície zadania a sú použité pre označenie častí z pôvodného cnc-kódu, ktoré sa májú alebo nemajú preniesť do výstupného súboru s novým cnc-kódom.  
 
 - `ENABLED` oblasti,  
   ako aj riadky s riadiacimi kódmi `M` a `T` sa do výstupného súboru prenášajú nezmenené.  
 
 - `DISABLED` oblasti  
-  kvôli prehľadnosti sa do výstupého súboru riadky z DISABLED oblastí prenášajú, ale zaremované. Teda pred každý riadok z DISABLED oblasti sa vloží (prepdonuje) REM-reťazec `"; "`. Vo výkone výstupného kódu sa teda tieto riadky nachádzajú zaremované a pri výkone tohoto kódu sa v konečnom dôsledku neuplatňujú.
+  kvôli prehľadnosti sa do výstupého súboru riadky z DISABLED oblastí prenášajú, ale zaremované. Teda pred každý riadok z DISABLED oblasti sa vloží (prepdonuje) REM-reťazec `"; "`. Vo výkone výstupného kódu sa tieto riadky nachádzajú len formálne a pri výkone kódu (frézovaní) sa v konečnom dôsledku neuplatňujú.
 
 ### Riadková analýza
-Vstupný súbor s pôvodným cnc-kódom sa analyzuje riadok po riadku. Ohľadne identifikácie, či sa jedná o riadok z ENABLED alebo z DISABLED oblasti, je kľúčová identifikácia riadkov s pracovným pohybom vnorenia, a to či je hjodnota vnorenia rovná alebo rôzna od požadovanej hodnoty `{hlbka_z}`:
+Vstupný súbor s pôvodným cnc-kódom sa analyzuje riadok po riadku. Ohľadne identifikácie, či sa jedná o riadok z ENABLED alebo z DISABLED oblasti, je kľúčová identifikácia riadkov s pracovným pohybom vnorenia, a to či je hodnota vnorenia rovná alebo rôzna od požadovanej hodnoty `{hlbka_z}`:
 
-- Ak riadok kódu začína príkazom pracovného pohybu `G1` so zmenou v Z-súradnici  `"G1Z-"{hlbka_z}`, napr. v našom príklade uvedenom nižšie je to reťazec "G1Z-11", potom tento riadok je začiatkom (alebo súčasťou už identifikovanej) **ENABLED** oblasti. Riadok sa do výstupného súboru skopíruje nezmenený. Zároveň sa nastaví interný status oblasti na `True`.  
+- Ak riadok kódu začína príkazom pracovného pohybu `G1` so zmenou v Z-súradnici  `"G1Z-{hlbka_z}"`, napr. v príklade uvedenom nižšie je to reťazec "G1Z-11", potom tento riadok je začiatkom (alebo súčasťou už identifikovanej) **ENABLED** oblasti. Riadok sa do výstupného súboru skopíruje nezmenený. Zároveň sa nastaví interný status oblasti na `True`.  
   
-- Ak riadok kódu začína príkazom pracovného pohybu `G1`, ale so zmenou v Z-súradnici na hodnotu iného než finálneho vnorenia - vo výraze `"G1Z-"{niečo}` je `{niečo} <> {hlbka_z}`, napr. v našom príklade uvedenom nižšie je to reťazec "G1Z-5.5", potom tento riadok je začiatkom (alebo súčasťou už identifikovanej) **DISABLED** oblasti. Riadok sa do výstupného súboru prenesie zaremovaný. Zároveň sa nastaví interný status oblasti na `False`, aby bolo zrejmé že aj nasledujúce riadky majú bý vo výstupnom kóde odfiltrované (remované).  
+- Ak riadok kódu začína príkazom pracovného pohybu `G1`, ale so zmenou v Z-súradnici na hodnotu inú než je finálne vnorenie - vo výraze `"G1Z-"{niečo}` je `{niečo} <> {hlbka_z}`, napr. v príklade uvedenom nižšie je to reťazec "G1Z-5.5", potom tento riadok je začiatkom (alebo súčasťou už identifikovanej) **DISABLED** oblasti. Riadok sa do výstupného súboru prenesie zaremovaný. Zároveň sa nastaví interný status oblasti na `False`, aby bolo zrejmé že aj nasledujúce riadky majú byť vo výstupnom kóde zaremované - a to dovtedy, kým sa nenarazí na ENABLED oblasť.  
   
-- Ak riadok kódu začína iným príkazom, ale je nastavený status oblasti na `True` - t.j. identifikovaná je momentálne ENABLED oblasť, tiež sa takýto riadok do výstupného súboru kopíruje nezmenený.  
+- Ak riadok kódu začína iným príkazom, ale je nastavený status oblasti na `True` - t.j. identifikovaná je momentálne ENABLED oblasť, tak sa takýto riadok do výstupného súboru skopíruje nezmenený.  
 
 
 ## Popis funkcií
@@ -61,14 +61,27 @@ Vstupný súbor s pôvodným cnc-kódom sa analyzuje riadok po riadku. Ohľadne 
 
 ## Príklad použitia  
 
-Predpokladajme pôvodný cnc-kód pre 2,5D frézu, v ktorom je naprogramované rezanie `10mm hrubého materiálu` na 2 vnorenia. Pričom prvé vnorenie reže materiál len do polovice jeho hrubky (napr. -5 mm) a až to druhé (finálne) vnorenie nástroja do hĺbky `-11mm` prereže materál úplne. Počas finálneho vnorenia sú v kóde naprogramované a mostíky, t.j. miesta kde na určitej dĺžke v dráhe frézy materiál nie je úplne prerezaný.
+Predpokladajme pôvodný cnc-kód pre 2,5D frézu, v ktorom je naprogramované rezanie `10 mm hrubého` materiálu, ale na 2 vnorenia. Pričom prvé vnorenie reže materiál len do polovice jeho hrúbky (napr. -5 mm) a až to druhé (finálne) vnorenie nástroja do hĺbky `-11 mm`, čím prereže materál úplne. Počas finálneho vnorenia sú v kóde naprogramované aj mostíky.  
 
-Samotný kód nie je problém. Problémom je, že po vykponaní kódu zostane v rezných drážkach zbytok odrezaného materiálu (trieska), ktorý nie je jednoduche z drážky vysať. Je potrebné drážky prečistiť ďalším prechodom frézky. Lenže - keďže má pôvodný kód až 2 vnorenia, tak jeho vykonanie trvá pomerne dlho.
+Poznámka k mostíkom:
 
-Potrebujeme preto nový kód, ktorý je v zásade totožný s pôvodným cnc-kódom, ale musí obsahovať len kódy z finálneho vnorenia. Pre samotné vybratia triesky z drážok prvé vnorenie nepotrebujeme.
+    Mostíky sú miesta, kde na určitej dĺžke v dráhe frézy materiál nie je úplne prerezaný. Majú význam hlavne pri frézovaní menších tvarov. Ich úlohou je udržať odrezanú časť v príreze, aby sa po odrezaní tento diel neposunul a tak prípadne nekolizoval s rezným nástrojom frézy.
+
+
+Samotný kód nie je problém. Problémom je, že po vykponaní kódu zostane v rezných drážkach trieska, ktorú niekedy nie je jednoduché dodatočne vysať. Preto je často potrebné drážky prečistiť ďalším prechodom frézky. Lenže - keďže má pôvodný kód až 2 vnorenia, tak jeho vykonanie trvá pomerne dlho.
+
+Potrebujeme preto nový cnc-kód, ktorý je v istých častiach totožný s pôvodným kódom, mal by však obsahovať len kódy z finálnych vnorení. Pre samotné vybratia triesky z drážok prvé vnorenie nepotrebujeme, frézka sa môže vnárať rovno do finálnej hĺbky.
 
 Preto pôvodný kód upravíme pomocou skriptu `cncfilter.py`. Skript z neho odfiltruje všetky pracovné pohyby prvého vnorenia resp. vnorení (ak ich je viacej) - teda tých, ktoré nerežú do materiálu v jeho plnej hrúbke. 
 
-Pôvodný kod potom volá nasledovne
+Príklad spustenia tvorby nového kódu:  
+    ```
+    python cncfilter.py -i povodnykod.cnc -o cistiacikod.cnc -z 11
+    ```  
 
-- 
+Výsledný súbor *cistiacikod.cnc* bude obsahovať len riadky s kodom, ktoré začali vnorením nástroja do požadovanej hĺbky 11 mm.  
+
+Mostíky finálneho prechodu zostávajú:  
+
+    Čiastočné vynárania a opätovné následné vnárania sa nástroja pri vytváraní mostíkov nie sú deklarované ako pracovné pohyby (kód G1), ale ako nepracovné pohyby nepracovné (kód G0). Takže riadky pre mostíky sú súčasťou 'požadovaných' oblastí a zostávajú v novom kode nezmenené.
+
