@@ -67,11 +67,11 @@ Predpokladajme pôvodný cnc-kód pre 2,5D frézu, v ktorom je naprogramované r
 - Majú význam hlavne pri frézovaní menších tvarov. 
 - Ich úlohou je udržať odrezanú časť v príreze, aby sa po odrezaní tento diel neposunul a tak prípadne nekolidoval s rezným nástrojom frézy.  
 
-Problémom pri frézovaní je veľmi často to, že po vykonaní kódu zostane v rezných drážkach trieska, ktorú niekedy nie je jednoduché dodatočne vyčistiť. Preto je často potrebné drážky prečistiť ďalším prechodom frézky. Lenže - keďže má pôvodný kód až 2 vnorenia, tak jeho vykonanie trvá pomerne dlho a prvý prechod (nefinálne vnorenia) sú už zbytočné.
+Problémom pri frézovaní je veľmi často to, že po vykonaní kódu zostane v rezných drážkach trieska, ktorú niekedy nie je jednoduché dodatočne vyčistiť. Preto je často potrebné drážky prečistiť ďalším prechodom frézky. Lenže - keďže má pôvodný kód až 2 vnorenia, tak jeho vykonanie trvá pomerne dlho a prvý prechod (nefinálne vnorenie) je zbytočný.
 
 Potrebujeme preto nový cnc-kód, ktorý je v istých častiach totožný s pôvodným kódom, mal by však obsahovať len kódy z finálnych vnorení. Pre samotné vybratia triesky z drážok prvé vnorenie nepotrebujeme, frézka sa môže vnárať rovno do finálnej hĺbky.
 
-Preto pôvodný kód upravíme pomocou skriptu `cncfilter.py`. Skript z neho odfiltruje všetky pracovné pohyby prvého vnorenia resp. vnorení (ak ich je viacej) - teda tých, ktoré nerežú do materiálu v jeho plnej hrúbke. 
+Preto pôvodný kód necháme upraviť skriptom `cncfilter.py`. Skript z neho odfiltruje všetky pracovné pohyby prvého vnorenia resp. vnorení (ak ich je viacej) - teda tých, ktoré nerežú do materiálu v jeho plnej hrúbke. 
 
 Príklad spustenia tvorby nového kódu:  
     ```
