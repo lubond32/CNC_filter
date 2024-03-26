@@ -30,7 +30,7 @@ python cncfilter.py [-i vstupny_subor] [-o vystupny_subor] [-z hlbka_z] [-h]
 5. Nežiaduce časti kódu (DISABLED oblasti) sú zaremované a vložené do výstupného súboru vo forme komentárov.
 
 ### ENABLED / DISABLED oblasti
-Termíny `ENABLED` oblasť a `DISABLED` oblasť vznikli v pocese definície zadania a sú použité pre označenie častí z pôvodného cnc-kódu, ktoré sa májú alebo nemajú preniesť do výstupného súboru s novým cnc-kódom.  
+Termíny `ENABLED` oblasť a `DISABLED` oblasť vznikli v pocese definície zadania a sú použité pre označenie častí z pôvodného cnc-kódu, ktoré sa majú alebo nemajú preniesť do výstupného súboru s novým cnc-kódom.  
 
 - `ENABLED` oblasti,  
   ako aj riadky s riadiacimi kódmi `M` a `T` sa do výstupného súboru prenášajú nezmenené.  
