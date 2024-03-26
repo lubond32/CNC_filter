@@ -1,36 +1,8 @@
 ﻿""" 
-Zadanie pre chat.openai.com
-===========================
-
-Vygeneruj zdrojový program v jazyku Python 3 s nasledujúcou špecifikáciou:
-
-Vytvor zdrojový program s názvom 'cncfilter.py' pod Python 3, čo bude spúšťaný z príkazového riadku s parametrami:
--i [inputfilename], názov vstupného súboru, napr. 'source.cnc ',
--o [outputfilename], názov výstupného súboru, napr. 'target.cnc',
--z [deepZ]  číselná hodnota posledného vnorenia 'Z'. 'deepZ' musí byť zadaná buď ako celé číslo, alebo číslo s oddeľovačom desatinného miesta ".".
-
-Ak vstupné parametre nebudú v príkaze pre spustenie programu uvedené , program po spustení  požiada používateľa o ich zadanie. Ak meno výstupného súboru nebude zadané cez '-o' parameter, program ponúkne defaultný názov vytvorený z názvu vstupného súboru pridaním reťazca "_OUTPUT".
-Na  začiatku nech program overí, či zadaný vstupný súbor existuje a či obsahuje G-kód (typické príkazy pre G-kod sú napr. 'T', 'G', 'M' príkazy, alebo iné). Ak je podozrenie, že vstupný súbor G-kódy neobsahuje, nech na to program používateľa upozorní a požiada ho o potvrdenie alebo zmenu názvu.
-
-Program má robiť nasledovné:
-Otvorí vstupný súbor s G-kódmi a bude ho čítať riadok po riadku analyzovať a ich prípadným prekopírovaním vytvorí nový výstupný súbor - a to tak, že ponechá zo vstupného súboru len žiadúce 'ENABLED' riadkové oblasti a 'CONTROL' riadky. Čo inými slovami znamená, že pri generovaní výstupného súboru sa odfiltrujú nežiadúce 'DASABLED' riadkové oblasti. 
-
-Program preto musí najskôr identifikovať ENABLED oblasti, DISABLED oblasti a CONTROL riadky. DISABLED oblasti do výstupného súboru program neprekopíruje! Identifikácia ENABLED oblasti je dôležitá aj preto, lebo ukočuje prípadnú predchádzajúcu DISABLED oblasť.
-
-Pravidlá pre identifikáciu OBLASTÍ:
-
-1/ Pre obe oblasti (ENABLED aj DISABLED) platí, že sú to súvislé a po sebe nasledujúce riadky. 
-
-2/ Okrem bodu 1 pre ENABLED oblasť  platí:
-- ENABLED oblasť začína riadkom ktorý začína výrazom "G0" alebo obsahuje "Z" príkaz "G1Z-deepZ", kde deepZ je zadaná hodnota. Ak sa narazí na takýto riadok, tak sa potom hľadá koniec ENABLED oblasti, ktorá:
-- končí riadkom (v rátane tohoto riadku), ktorý je buď úplne posledným riadkom vstupného súboru, alebo je to riadok ktorý je pred prvým riadkom najbližšej nasledujúcej DISABLED skupiny, a to podľa toho čo nastane skôr.
-
-2/ Okrem bodu 1 pre DISABLED oblasť navyše platí:
-- oblasť začína riadkom začínajúcim s príkazom 'G1' a súčasne tento riadok obsahuje "Z" príkaz ktorý je iný než "Z-deepZ", kde deepZ je zadaná  hodnota. Ak sa narazí na takýto riadok, tak sa potom hľadá koniec DISABLED oblasti, ktorá:
-- končí riadkom (v rátane tohoto riadku), ktorý je buď úplne posledný riadok súboru, alebo je to riadok ktorý je pred prvým riadkom najbližšej nasledujúcej ENABLED skupiny, a to podľa toho čo nastane skôr.
-
-Pre CONTROL riadky platí:
-- riadok nie je súčasťou ani ENABLED oblasti, ani DISABLED oblasti a súčasne platí, že riadok začína špeciálnym príkazom "T" alebo "M". 
+cncfilter.py - redukčný Python 3 skript.
+Program cncfilter.py slúži na filtrovanie prechodov v súboroch obsahujúcich
+CNC G-kód. Filtruje nežiaduce časti kódu na základe zadaných parametrov 
+a vytvára nový súbor obsahujúci len žiadúce časti.
 """
 import sys
 import os
