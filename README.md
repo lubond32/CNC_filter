@@ -5,8 +5,7 @@ redukčný Python 3 skript
 
 Program `cncfilter.py` slúži na filtrovanie súborov obsahujúcich CNC G-kód. Filtruje nežiaduce časti kódu na základe zadaných parametrov a vytvára nový súbor obsahujúci len žiadúce časti.  
 
-Primárnym cieľom bolo odfiltrovať zo súboru všetky pracovné pohyby súvisiace s frézovaním na **nefinálnom** vnorení nástroja. Nový súbor bude obsahovať len pracovné pohyby s finálnym vnorením v osi Z.
-
+Primárnym cieľom je odfiltrovať zo súboru všetky pracovné pohyby súvisiace s frézovaním na **nefinálnom** vnorení nástroja. Nový súbor bude obsahovať len pracovné pohyby s finálnym vnorením v osi Z. Tu pozri [príklad použitia](#príklad-použitia).
 
 ## Spúšťanie programu
 
@@ -61,7 +60,7 @@ Vstupný súbor s pôvodným cnc-kódom sa analyzuje riadok po riadku. Ohľadne 
 
 ## Príklad použitia  
 
-Predpokladajme pôvodný cnc-kód pre 2,5D frézu, v ktorom je naprogramované rezanie `10 mm hrubého` materiálu, ale na 2 vnorenia. Pričom prvé vnorenie reže materiál len do polovice jeho hrúbky (napr. -5 mm) a až to druhé (finálne) vnorenie nástroja do hĺbky `-11 mm`, čím prereže materál úplne. Počas finálneho vnorenia sú v kóde naprogramované aj mostíky.  
+Predpokladajme pôvodný cnc-kód pre 2,5D frézu, v ktorom je naprogramované rezanie `10 mm hrubého` materiálu, ale na 2 vnorenia. Pričom prvé vnorenie nástroja reže materiál len do polovice jeho hrúbky (napr. -5 mm) a až to druhé (finálne) vnorenie do hĺbky `-11 mm`, čím prereže materál úplne. Počas finálneho vnorenia sú v kóde naprogramované aj mostíky.  
 
 **Poznámka k mostíkom:**  
 - Mostíky sú miesta, kde na určitej dĺžke v dráhe frézy materiál nie je úplne prerezaný. 
