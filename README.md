@@ -9,7 +9,7 @@ Primárnym cieľom je odfiltrovať zo súboru všetky pracovné pohyby súvisiac
 
 ## Spúšťanie programu
 
-``bash
+``
 python cncfilter.py [-i vstupny_subor] [-o vystupny_subor] [-z hlbka_z] [-h]
 ``
 
