@@ -1,0 +1,26 @@
+﻿Popis:
+Program cncfilter.py slúži na filtrovanie súborov obsahujúcich CNC G-kód. Filtruje nežiaduce časti kódu na základe zadaných parametrov a vytvára nový súbor obsahujúci len žiadúce časti.
+
+Spúšťanie programu:
+bash
+Copy code
+python cncfilter.py [-i vstupny_subor] [-o vystupny_subor] [-z hlbka_z] [-h]
+Parametre:
+-i vstupny_subor: Určuje vstupný súbor s CNC G-kódom.
+-o vystupny_subor: Určuje názov výstupného súboru, kam bude uložený filtrovaný kód. Ak nie je zadaný, použije sa predvolený názov s pridaným "_OUTPUT".
+-z hlbka_z: Určuje hĺbku Z, ktorá sa použije na filtrovanie pracovných pohybov. Môže byť zadaná buď ako celé číslo alebo číslo s desatinným miestom oddeleným bodkou ".".
+-h: Zobrazí nápovedu s možnosťami spustenia programu.
+Funkcionalita:
+Program najprv spracuje a overí zadané parametre.
+Ak chýbajú nejaké parametre, program požiada používateľa o ich zadanie alebo ponúkne možnosť zobraziť nápovedu.
+Kontroluje, či zadaný vstupný súbor existuje a obsahuje CNC G-kód. Ak nie, program upozorní používateľa a požiada ho o potvrdenie alebo zmenu názvu súboru.
+Na základe zadaných parametrov filtrovaných pracovných pohybov (ENABLED a DISABLED oblastí) a hĺbky Z, program spracuje vstupný súbor a vytvorí výstupný súbor obsahujúci len žiadúce časti kódu.
+Nežiaduce časti kódu (DISABLED oblasti) sú zaremované a vložené do výstupného súboru vo forme komentárov.
+Popis funkcií:
+parse_args(args): Spracováva argumenty príkazového riadku a vracia tuple obsahujúci hodnoty vstupného súboru, výstupného súboru a hĺbky Z.
+print_help(): Vypisuje nápovedu s možnosťami spustenia programu a vysvetlením jednotlivých parametrov.
+get_input_file(): Získava názov vstupného súboru od používateľa a kontroluje, či súbor existuje.
+get_output_file(input_file): Generuje názov výstupného súboru na základe názvu vstupného súboru.
+check_gcode(input_file): Kontroluje, či vstupný súbor obsahuje CNC G-kód.
+process_file(input_file, output_file, deep_z): Spracúva vstupný súbor s CNC G-kódom a vytvára výstupný súbor s filtrovanými G-kódmi.
+main(): Hlavná funkcia programu, ktorá riadi celý proces spracovania.
