@@ -135,12 +135,6 @@ def main():
         if choice.lower() != 'y':
             return
     
-    print
-    print(f"vstup:  {input_file}")
-    print(f"vystup: {output_file}")
-    print(f"deep_z: {deep_z}")
-    print
-
     process_file(input_file, output_file, deep_z)
     print(f"Vyfiltrovaný G-kód bol uložený do súboru {output_file}")
 
