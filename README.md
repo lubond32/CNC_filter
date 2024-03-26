@@ -63,12 +63,12 @@ Vstupný súbor s pôvodným cnc-kódom sa analyzuje riadok po riadku. Ohľadne 
 
 Predpokladajme pôvodný cnc-kód pre 2,5D frézu, v ktorom je naprogramované rezanie `10 mm hrubého` materiálu, ale na 2 vnorenia. Pričom prvé vnorenie reže materiál len do polovice jeho hrúbky (napr. -5 mm) a až to druhé (finálne) vnorenie nástroja do hĺbky `-11 mm`, čím prereže materál úplne. Počas finálneho vnorenia sú v kóde naprogramované aj mostíky.  
 
-Poznámka k mostíkom:
+**Poznámka k mostíkom:**  
+- Mostíky sú miesta, kde na určitej dĺžke v dráhe frézy materiál nie je úplne prerezaný. 
+- Majú význam hlavne pri frézovaní menších tvarov. 
+- Ich úlohou je udržať odrezanú časť v príreze, aby sa po odrezaní tento diel neposunul a tak prípadne nekolidoval s rezným nástrojom frézy.  
 
-    Mostíky sú miesta, kde na určitej dĺžke v dráhe frézy materiál nie je úplne prerezaný. Majú význam hlavne pri frézovaní menších tvarov. Ich úlohou je udržať odrezanú časť v príreze, aby sa po odrezaní tento diel neposunul a tak prípadne nekolizoval s rezným nástrojom frézy.
-
-
-Samotný kód nie je problém. Problémom je, že po vykponaní kódu zostane v rezných drážkach trieska, ktorú niekedy nie je jednoduché dodatočne vysať. Preto je často potrebné drážky prečistiť ďalším prechodom frézky. Lenže - keďže má pôvodný kód až 2 vnorenia, tak jeho vykonanie trvá pomerne dlho.
+Problémom pri frézovaní je veľmi často to, že po vykponaní kódu zostane v rezných drážkach trieska, ktorú niekedy nie je jednoduché dodatočne vyčistiť. Preto je často potrebné drážky prečistiť ďalším prechodom frézky. Lenže - keďže má pôvodný kód až 2 vnorenia, tak jeho vykonanie trvá pomerne dlho a prvý prechod (nefinálne vnorenia) sú už zbytočné.
 
 Potrebujeme preto nový cnc-kód, ktorý je v istých častiach totožný s pôvodným kódom, mal by však obsahovať len kódy z finálnych vnorení. Pre samotné vybratia triesky z drážok prvé vnorenie nepotrebujeme, frézka sa môže vnárať rovno do finálnej hĺbky.
 
@@ -79,9 +79,14 @@ Príklad spustenia tvorby nového kódu:
     python cncfilter.py -i povodnykod.cnc -o cistiacikod.cnc -z 11
     ```  
 
-Výsledný súbor *cistiacikod.cnc* bude obsahovať len riadky s kodom, ktoré začali vnorením nástroja do požadovanej hĺbky 11 mm.  
+Vytvorí sa nový súbor *cistiacikod.cnc*, ktorý bude obsahovať len riadky s kódom súvisiacim s finálnym vnorením, teda do hĺbky 11 mm.  
 
-Mostíky finálneho prechodu zostávajú:  
+**Mostíky finálneho prechodu zostávajú:**  
 
-    Čiastočné vynárania a opätovné následné vnárania sa nástroja pri vytváraní mostíkov nie sú deklarované ako pracovné pohyby (kód G1), ale ako nepracovné pohyby nepracovné (kód G0). Takže riadky pre mostíky sú súčasťou 'požadovaných' oblastí a zostávajú v novom kode nezmenené.
-
+Čiastočné vynárania a opätovné následné vnárania sa nástroja pri vytváraní mostíkov 
+- nie sú deklarované ako pracovné pohyby (kód G1), ale
+- sú deklarované ako nepracovné pohyby s kódom G0 a preto
+  - nemenia status oblasti.
+- Takže mostíky 
+  - sú súčasťou 'požadovaných' oblastí a 
+  - zostávajú v novom kóde nezmenené.
